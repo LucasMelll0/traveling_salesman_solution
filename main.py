@@ -12,7 +12,6 @@ distances = [[0, 5, 2, 3, 7, 5, 6, 9],
 
 def generateRandomPopulation(populationSize):
     population = []
-
     # set() transforma a lista em um set, sets são listas que não possuem elementos repetidos
     # Enquanto o set population for menor que populationSize...
     while len(set(population)) < populationSize:
@@ -28,3 +27,31 @@ def generateRandomPopulation(populationSize):
         population.append(individual)
 
     return set(population)
+
+def getFitness(population):
+    fitness = {}
+    for individual in population:
+        cost = 0
+        # For i para o tamanho do individuo
+        for i in range(len(individual)):
+            # Se não for o ultimo elemento
+            if i < len(individual) - 1:
+                # Pega a posição do eixo y na lista distances
+                y = int(individual[i])
+                y = distances[y]
+                # Pega a posição do eixo x na lista distances
+                x = int(individual[i+1])
+                # Pega o valor na posição do eixo x
+                value = y[x]
+                # Adiciona ao custo
+                cost = cost + value
+        fitness[individual] = cost
+
+    return fitness
+
+population = generateRandomPopulation(3)
+fitness = getFitness(population)
+
+print(f"population: {population}")
+print(f"fitness: {fitness}")
+
