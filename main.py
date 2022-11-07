@@ -12,14 +12,19 @@ distances = [[0, 5, 2, 3, 7, 5, 6, 9],
 
 def generateRandomPopulation(populationSize):
     population = []
+
+    # set() transforma a lista em um set, sets são listas que não possuem elementos repetidos
+    # Enquanto o set population for menor que populationSize...
     while len(set(population)) < populationSize:
+        # Quantidade aleatória de caminhos entre 0 e 7
         numberOfWays = random.randint(0, 5)
+        # Individuo sempre começa no 0
         individual = '0'
+        # Adiciona os caminhos aleatórios após o 0
         for i in range(numberOfWays):
             individual = individual + str(random.randint(1, 6))
+        # Individuo sempre termina no 7
         individual = individual + '7'
         population.append(individual)
+
     return set(population)
-
-
-
