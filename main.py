@@ -37,14 +37,14 @@ def getFitness(population):
             # Se não for o ultimo elemento
             if i < len(individual) - 1:
                 # Pega a posição do eixo y na lista distances
-                y = int(individual[i])
-                y = distances[y]
+                y = distances[int(individual[i])]
                 # Pega a posição do eixo x na lista distances
                 x = int(individual[i+1])
                 # Pega o valor na posição do eixo x
                 value = y[x]
                 # Adiciona ao custo
                 cost = cost + value
+        # Adiciona o individuo(key) com o custo(value) ao dict/map
         fitness[individual] = cost
 
     return fitness
