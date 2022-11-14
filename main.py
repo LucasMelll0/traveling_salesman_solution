@@ -28,6 +28,7 @@ def generateRandomPopulation(populationSize):
 
     return set(population)
 
+
 def getFitness(population):
     fitness = {}
     for individual in population:
@@ -39,7 +40,7 @@ def getFitness(population):
                 # Pega a posição do eixo y na lista distances
                 y = distances[int(individual[i])]
                 # Pega a posição do eixo x na lista distances
-                x = int(individual[i+1])
+                x = int(individual[i + 1])
                 # Pega o valor na posição do eixo x
                 value = y[x]
                 # Adiciona ao custo
@@ -49,9 +50,26 @@ def getFitness(population):
 
     return fitness
 
-population = generateRandomPopulation(3)
+
+def geneticAlgorithm(population):
+    mutationProbability = 0.03
+    newPopulation = []
+    populationSize = len(population)
+    while len(set(newPopulation)) < populationSize:
+        individual1 = random.choice(list(population))
+        individual2 = random.choice(list(population))
+        offspring1 = individual1[0:len(individual1) - 1] + individual2[int((len(individual2) * 0.5)):]
+        offspring2 = individual1[0:len(individual2) - 1] + individual2[int((len(individual1) * 0.5)):]
+
+        #if random.random() < mutationProbability:
+
+
+population = generateRandomPopulation(10)
 fitness = getFitness(population)
-
+print(list(population))
 print(f"population: {population}")
-print(f"fitness: {fitness}")
-
+individual1 = random.choice(list(population))
+individual2 = random.choice(list(population))
+print(f"individual 1: {individual1}, individual 2: {individual2}")
+offspring1 = individual1[0:len(individual1) - 1] + individual2[int((len(individual2) * 0.5)):]
+print(offspring1)
