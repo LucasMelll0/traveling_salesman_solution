@@ -9,6 +9,15 @@ distances = [[0, 5, 2, 3, 7, 5, 6, 9],
              [6, 7, 4, 3, 2, 1, 0, 1],
              [9, 6, 5, 8, 3, 2, 1, 0]]
 
+otherDistancesToTest = [[4, 3, 1, 4, 8, 6, 7, 6],
+                        [6, 6, 2, 3, 4, 5, 8, 2],
+                        [1, 9, 1, 2, 3, 12, 8, 5],
+                        [2, 1, 0, 4, 9, 3, 6, 4],
+                        [6, 2, 1, 5, 2, 4, 4, 1],
+                        [4, 6, 27, 1, 4, 2, 3, 2],
+                        [5, 6, 3, 2, 3, 2, 2, 3],
+                        [8, 5, 4, 6, 4, 3, 2, 4]]
+
 
 def generateRandomPopulation(populationSize):
     population = []
@@ -38,7 +47,7 @@ def getFitness(population):
             # Se não for o ultimo elemento
             if i < len(individual) - 1:
                 # Pega a posição do eixo y na lista distances
-                y = distances[int(individual[i])]
+                y = otherDistancesToTest[int(individual[i])]
                 # Pega a posição do eixo x na lista distances
                 x = int(individual[i + 1])
                 # Pega o valor na posição do eixo x
@@ -51,25 +60,49 @@ def getFitness(population):
     return fitness
 
 
-def geneticAlgorithm(population):
-    mutationProbability = 0.03
+def geneticAlgorithm(population, fitness):
+    mutationProbability = 0.5
     newPopulation = []
     populationSize = len(population)
+    theBestIndividuals = dict(sorted(fitness.items(), key=lambda item: item[1]))
+    theBestIndividuals = list(theBestIndividuals.keys())
+    for i in range(int(len(theBestIndividuals) * 0.5)):
+        individual = theBestIndividuals[i]
+        newPopulation.append(individual)
     while len(set(newPopulation)) < populationSize:
         individual1 = random.choice(list(population))
         individual2 = random.choice(list(population))
-        offspring1 = individual1[0:len(individual1) - 1] + individual2[int((len(individual2) * 0.5)):]
-        offspring2 = individual1[0:len(individual2) - 1] + individual2[int((len(individual1) * 0.5)):]
+        if len(individual1) < 3 or len(individual2) < 3:
+            continue
 
-        #if random.random() < mutationProbability:
+        if len(individual1) > 3 and len(individual2) > 3:
+            crossverPoint = random.randint(1, 3)
+            offspring1 = individual1[0:crossverPoint] + individual2[crossverPoint:]
+            offspring2 = individual2[0:crossverPoint] + individual1[crossverPoint:]
+        else:
+            crossverPoint = random.randint(1, 2)
+            offspring1 = individual1[0:crossverPoint] + individual2[crossverPoint:]
+            offspring2 = individual2[0:crossverPoint] + individual1[crossverPoint:]
+
+        if random.random() < mutationProbability:
+            mutationPoint = random.randint(1, 2)
+            offspring1 = offspring1[0:mutationPoint] + str(random.randint(1, 6)) + offspring1[mutationPoint:]
+        if random.random() < mutationProbability:
+            mutationPoint = random.randint(1, 2)
+            offspring2 = offspring2[0: mutationPoint] + str(random.randint(1, 6)) + offspring2[mutationPoint:]
+        newPopulation.append(offspring1)
+        newPopulation.append(offspring2)
+    return set(newPopulation)
 
 
-population = generateRandomPopulation(10)
+maxGenerations = 500
+population = generateRandomPopulation(2)
 fitness = getFitness(population)
-print(list(population))
-print(f"population: {population}")
-individual1 = random.choice(list(population))
-individual2 = random.choice(list(population))
-print(f"individual 1: {individual1}, individual 2: {individual2}")
-offspring1 = individual1[0:len(individual1) - 1] + individual2[int((len(individual2) * 0.5)):]
-print(offspring1)
+geneticAlgorithm(population, fitness)
+generation = 1
+for i in range(maxGenerations):
+    print(f"Generation {generation} - Fittest is {min(fitness.values())}")
+    population = geneticAlgorithm(population, fitness)
+    fitness = getFitness(population)
+    generation = generation + 1
+print(f"The minimum cost was: {min(fitness.values())} with the individual: {min(fitness, key=fitness.get)}")
