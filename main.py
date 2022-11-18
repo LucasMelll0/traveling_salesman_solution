@@ -47,7 +47,7 @@ def getFitness(population):
             # Se não for o ultimo elemento
             if i < len(individual) - 1:
                 # Pega a posição do eixo y na lista distances
-                y = otherDistancesToTest[int(individual[i])]
+                y = distances[int(individual[i])]
                 # Pega a posição do eixo x na lista distances
                 x = int(individual[i + 1])
                 # Pega o valor na posição do eixo x
@@ -106,3 +106,4 @@ for i in range(maxGenerations):
     fitness = getFitness(population)
     generation = generation + 1
 print(f"The minimum cost was: {min(fitness.values())} with the individual: {min(fitness, key=fitness.get)}")
+
